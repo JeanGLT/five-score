@@ -1,0 +1,175 @@
+:root {
+  --bg: #0f1115;
+  --card: #1a1d24;
+  --card-2: #242832;
+  --text: #f2f3f5;
+  --muted: #8b91a0;
+  --accent: #ff6b3d;
+  --danger: #ff4d5e;
+  --ok: #3ddc97;
+  --radius: 16px;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+button { font: inherit; color: inherit; cursor: pointer; border: none; background: none; }
+.hidden { display: none !important; }
+
+/* Leave room for the iPhone notch and home bar */
+.screen {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + 20px) 16px calc(env(safe-area-inset-bottom) + 24px);
+}
+
+/* ---------- Setup screen ---------- */
+.logo { font-size: 56px; font-weight: 800; letter-spacing: -2px; margin: 24px 0 0; }
+.logo span { color: var(--accent); }
+.subtitle { color: var(--muted); margin: 0 0 28px; }
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.card label { display: block; color: var(--muted); font-size: 14px; margin-bottom: 10px; }
+.row { display: flex; align-items: center; justify-content: space-between; }
+.row label { margin: 0; }
+
+.stepper { display: flex; align-items: center; gap: 16px; }
+.stepper button {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--card-2); font-size: 22px;
+}
+.stepper span { font-size: 22px; font-weight: 700; min-width: 20px; text-align: center; }
+
+#name-inputs { margin-top: 12px; display: grid; gap: 8px; }
+input {
+  width: 100%;
+  font: inherit;
+  font-size: 17px; /* 16px+ prevents iOS from zooming in on focus */
+  color: var(--text);
+  background: var(--card-2);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 12px 14px;
+  outline: none;
+}
+input:focus { border-color: var(--accent); }
+
+.segmented { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.segmented button {
+  background: var(--card-2);
+  border-radius: 12px;
+  padding: 12px 0;
+  font-size: 18px; font-weight: 600;
+}
+.segmented button.active { background: var(--accent); color: #fff; }
+
+.primary {
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 18px; font-weight: 700;
+  border-radius: var(--radius);
+  padding: 18px;
+}
+.primary:active { transform: scale(0.98); }
+
+.ghost { color: var(--muted); padding: 8px 4px; font-size: 15px; }
+.ghost.accent { color: var(--accent); font-weight: 700; }
+
+/* ---------- Game screen ---------- */
+.topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.info { color: var(--muted); font-size: 15px; text-align: right; }
+.info strong { color: var(--text); }
+
+#scoreboard { list-style: none; padding: 0; margin: 0 0 20px; display: grid; gap: 10px; }
+.player {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+}
+.player .line { display: flex; justify-content: space-between; align-items: baseline; }
+.player .name { font-size: 20px; font-weight: 600; }
+.player .score { font-size: 40px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.player .left { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.player .bar { height: 4px; background: var(--card-2); border-radius: 2px; margin-top: 10px; }
+.player .bar div { height: 100%; background: var(--ok); border-radius: 2px; }
+.player.warn .bar div { background: var(--accent); }
+.player.out { opacity: 0.4; }
+.player.out .name { text-decoration: line-through; }
+.player.out .left { color: var(--danger); }
+.player.out .bar div { background: var(--danger); }
+.player.leader .name::after { content: " 👑"; }
+
+.actions { display: grid; gap: 8px; }
+.secondary-actions { display: flex; justify-content: space-between; }
+#undo:disabled { opacity: 0.3; }
+
+/* History table */
+#history { margin-top: 16px; overflow-x: auto; }
+#history table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+#history th, #history td { padding: 6px 8px; text-align: right; font-size: 15px; white-space: nowrap; }
+#history th:first-child, #history td:first-child { text-align: left; color: var(--muted); }
+#history th { color: var(--muted); font-weight: 600; }
+#history tfoot td { font-weight: 800; border-top: 1px solid var(--card-2); }
+
+/* ---------- Round sheet & winner popup ---------- */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex; align-items: flex-end; justify-content: center;
+  z-index: 10;
+}
+.overlay.center { align-items: center; padding: 16px; }
+
+.sheet {
+  background: var(--card);
+  width: 100%; max-width: 480px;
+  max-height: 92vh; overflow-y: auto;
+  border-radius: 24px 24px 0 0;
+  padding: 12px 16px calc(env(safe-area-inset-bottom) + 20px);
+  animation: slide-up 0.2s ease-out;
+}
+@keyframes slide-up { from { transform: translateY(100%); } to { transform: none; } }
+
+.sheet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.sheet-header h2 { font-size: 17px; margin: 0; }
+
+.round-row {
+  display: grid;
+  grid-template-columns: 1fr 96px;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--card-2);
+}
+.round-row:last-child { border-bottom: none; }
+.round-row .name { font-size: 18px; font-weight: 600; }
+.round-row .preview { color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+.round-row .preview.danger { color: var(--danger); font-weight: 700; }
+.round-row input { text-align: center; font-size: 22px; font-weight: 700; padding: 10px 6px; }
+
+.winner-card {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 28px 20px 16px;
+  width: 100%; max-width: 360px;
+  text-align: center;
+  display: grid; gap: 6px;
+}
+.trophy { font-size: 64px; }
+.winner-card h2 { font-size: 32px; margin: 4px 0 0; color: var(--accent); }
+.winner-card p { color: var(--muted); margin: 0 0 16px; }
